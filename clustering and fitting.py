@@ -57,3 +57,45 @@ def converttonumbers(df,columnlist):
     df = df.replace(to_replace=".." , value="0")
     df[columnlist] = df[columnlist].apply(pd.to_numeric)
     return df
+
+def curveFit(dft,df1t,country):
+    '''
+    generating the curve fit for a given country
+
+    Parameters
+    ----------
+    dft : DataFrame
+        countries as columns dataframe.
+    df1t : DataFrame
+        Countries as columns dataframe.
+    country : String
+        countryname to plot curve fit.
+    
+
+    Returns
+    -------
+    None.
+
+    '''
+    countryNew = "New"+country
+    dft=converttonumbers(dft, [country])
+    df1t=converttonumbers(df1t, [country])
+    popt, covar = opt.curve_fit(objective,dft[country],df1t[country])
+    df1t[countryNew] = objective(dft[country], *popt)
+    plt.figure()
+    plt.plot(dft[country], df1t[country], color='red')
+    plt.plot(dft[country], df1t[countryNew], color='blue')
+    ci = np.std(df1t[country])/np.sqrt(len(df1t[country]))
+    plt.fill_between(dft[country], (df1t[country]-ci), (df1t[country]+ci),
+                 color='b', alpha=0.1)
+    # setting x-axis label
+    plt.xlabel(labels[0])
+    # setting y-axis label
+    plt.ylabel(labels[1])
+    # creating the legend and it's position
+    plt.legend(["Expected","Predicted"],loc = "upper right")
+    #Mentioning the title of the plot
+    plt.title("Curve Fit of India")
+    # showing the plot 
+    plt.show()
+
