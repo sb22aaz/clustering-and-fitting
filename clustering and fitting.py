@@ -99,3 +99,49 @@ def curveFit(dft,df1t,country):
     # showing the plot 
     plt.show()
 
+def kMeansCluster(df_fit,noclusters,labels,):
+    '''
+    Generating the k-means clustering for the given data
+
+    Parameters
+    ----------
+    df_fit : DataFrame
+        dataframe with which one uses k-means.
+    noclusters : int
+        number of clusters.
+    labels : list
+        list of labels.
+
+    Returns
+    -------
+    None.
+
+    '''
+    # creating KMeans with 4 clusters
+    kmeans = cluster.KMeans(n_clusters=noclusters)
+    # fitting the data
+    kmeans.fit(df_fit) 
+    # getting labels
+    labels = kmeans.labels_
+    # finding centers
+    cen = kmeans.cluster_centers_
+    # plotting the figure
+    plt.figure(figsize=(6.0, 6.0))
+
+    # Individual colours can be assigned to symbols. The label l is used to the 
+    # select l-th number from the colour table.
+    plt.scatter(df_fit["population"], df_fit["water"], c=labels, cmap="Accent")
+
+    # colour map Accent selected to increase contrast between colours
+    # show cluster centres
+    for ic in range(noclusters):
+        xc, yc = cen[ic,:]
+        plt.plot(xc, yc, "dk", markersize=10)
+
+    # setting x-axis label
+    plt.xlabel(labels[0])
+    # setting y-axis label
+    plt.ylabel(labels[1])
+    #Mentioning the title of the plot
+    plt.title("K-means Clustering")
+    plt.show()
